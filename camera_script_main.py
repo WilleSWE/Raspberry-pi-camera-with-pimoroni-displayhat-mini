@@ -4,27 +4,23 @@ from displayhatmini import DisplayHATMini
 from PIL import Image, ImageDraw
 from picamera2 import Picamera2
 
-# 1. Initiera hårdvaran
 hat = DisplayHATMini(None)
 picam2 = Picamera2()
 hat.set_led(0, 0, 0)
 
-# 2. Kamerakonfiguration
 config = picam2.create_preview_configuration(main={"format": "RGB888", "size": (320, 240)})
 picam2.configure(config)
 picam2.start()
 
-# --- SYSTEM-STATER ---
 MODES = ["Capture", "Library", "Settings"]
 current_mode_index = 0 
 zoom_level = 1.0
-exposure_val = 0.0 # Standard exponering
+exposure_val = 0.0
 is_saving = False
 photo_dir = os.path.expanduser("~/Photos")
 current_library_index = 0
 
 def get_sys_info():
-    # Hämtar temp och diskplats
     temp = subprocess.check_output(["vcgencmd", "measure_temp"]).decode("utf-8").replace("temp=", "")
     disk = subprocess.check_output("df -h / | awk 'NR==2 {print $4}'", shell=True).decode("utf-8").strip()
     return temp, disk
@@ -52,7 +48,6 @@ try:
         draw = ImageDraw.Draw(img_display)
         current_mode = MODES[current_mode_index]
 
-        # --- LÄGES-LOGIK ---
         if current_mode == "Capture":
             metadata = picam2.capture_metadata()
             exp = round(metadata.get("ExposureTime", 0) / 1000, 1)
@@ -80,18 +75,15 @@ try:
             draw.text((40, 150), "--- EXPOSURE (X/Y) ---", fill=(255, 255, 255))
             draw.text((40, 180), f"EV COMP: {round(exposure_val, 1)}", fill=(0, 255, 0))
 
-        # --- UI TOP BAR ---
         for i, m in enumerate(MODES):
             color = (255, 255, 255) if i == current_mode_index else (100, 100, 100)
             draw.text((50 + (i * 80), 12), m.upper(), fill=color)
         
-        # STATUS CIRKEL
         sc = (255,0,0) if is_saving else ((0,0,255) if current_mode=="Library" else ((255,0,255) if current_mode=="Settings" else (0,255,0)))
         draw.ellipse((10, 10, 25, 25), fill=sc, outline=(255, 255, 255))
 
         hat.st7789.display(img_display)
-
-        # --- KNAPPAR ---
+        
         if hat.read_button(hat.BUTTON_B):
             current_mode_index = (current_mode_index + 1) % len(MODES)
             time.sleep(0.3); continue
