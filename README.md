@@ -22,3 +22,9 @@ Second line is to host the server at http://cam-pi.local:8080/
 
 
 <img width="2560" height="1440" alt="Raspberry Pi Zero 2 W with Textures2" src="https://github.com/user-attachments/assets/a89c5b5f-8439-4c06-9294-7819dc939108" />
+
+
+<img width="2160" height="2880" alt="IMG_9046" src="https://github.com/user-attachments/assets/39056ec0-143f-427d-94d0-c65e37c5c6d0" />
+
+
+<img width="2160" height="2880" alt="IMG_9045" src="https://github.com/user-attachments/assets/dd6f05f5-1bbb-40ba-ad35-b1d01166c8b6" />
